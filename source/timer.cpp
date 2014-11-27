@@ -4,13 +4,21 @@ extern "C" {
 #include "nanostack-event-loop/platform/arm_hal_timer.h"
 } // extern "C"
 
+ 
+static void (*sn_callback)(void) = NULL;
+static Ticker sn_timer;
+static timestamp_t sn_compare_value;
+static bool timer_enabled = false;
+ 
+#define MAXIMUM_SLOTS 10000
+
 
 /**
  * \brief This function perform timer init.
  */
 void platform_timer_enable(void)
 {
-    // !!! TODO
+    //init in Ticker ctor
 }
 
 /**
@@ -21,7 +29,7 @@ void platform_timer_enable(void)
  */
 void platform_timer_set_cb(void (*new_fp)(void))
 {
-    // !!! TODO
+    sn_callback = new_fp;
 }
 
 /**
@@ -32,7 +40,9 @@ void platform_timer_set_cb(void (*new_fp)(void))
  */
 void platform_timer_start(uint16_t slots)
 {
-    // !!! TODO
+    sn_compare_value = slots * 50; // 1 slot = 50us
+    sn_timer.attach_us(sn_callback, sn_compare_value);
+    timer_enabled = true;
 }
 
 /**
@@ -41,7 +51,8 @@ void platform_timer_start(uint16_t slots)
  */
 void platform_timer_disable(void)
 {
-    // !!! TODO
+    sn_timer.detach();
+    timer_enabled = false;
 }
 
 /**
@@ -51,7 +62,14 @@ void platform_timer_disable(void)
  */
 uint16_t platform_timer_get_remaining_slots(void)
 {
-    // !!! TODO
+    uint32_t counter = us_ticker_read();
+    uint32_t slots = ((sn_compare_value - counter) / 50);
+ 
+    if ((slots > MAXIMUM_SLOTS) || (timer_enabled == false)) {
+        slots = 0;
+    }
+ 
+    return (uint16_t)slots;
 }
 
 
