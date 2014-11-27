@@ -1,0 +1,19 @@
+{
+  "name": "nanostack-eventos-mbed",
+  "version": "0.0.0",
+  "description": "Nanostack eventOS platform-specific implementation for mbed",
+  "keywords": [],
+  "author": "",
+  "homepage": "",
+  "licenses": [
+    {
+      "url": "https://spdx.org/licenses/Apache-2.0",
+      "type": "Apache-2.0"
+    }
+  ],
+  "dependencies": {
+    "nanostack-event-loop": "ssh://git.oulu.arm.com/home/git/repositories/nanomesh/event-loop.git",
+    "mbed": "mbedmicro/mbed_private"
+  },
+  "targetDependencies": {}
+}

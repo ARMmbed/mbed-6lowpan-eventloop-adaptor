@@ -1,0 +1,8 @@
+*~
+*.swp
+*.swo
+*.swn
+build
+yotta_modules
+yotta_targets
+
