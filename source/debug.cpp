@@ -6,7 +6,7 @@
 extern "C" {
 #include "libService/ns_types.h"
 #include "libService/platform/ns_debug.h"
-#include "libService//ip6string.h"
+#include "libService/ip6string.h"
 } // extern "C"
 
 #include <stdio.h>

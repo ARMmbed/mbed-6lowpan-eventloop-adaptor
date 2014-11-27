@@ -8,6 +8,7 @@ extern "C" {
 
 #include "nanostack/net_sleep.h"
 
+#include "libService/platform/ns_debug.h"
 #include "libService/platform/arm_hal_interrupt.h"
 
 } // extern "C"
@@ -52,7 +53,7 @@ void eventOS_scheduler_idle(void)
 			if(eventOS_scheduler_timer_stop() != 0)
 			{
                 // !!! TODO mbed debug?
-				//debug("EventOS timer sleep fail\n");
+				debug("EventOS timer sleep fail\n");
 			}
 
 			sleep_possible = eventOS_scheduler_sleep(sleep_possible);
@@ -63,7 +64,7 @@ void eventOS_scheduler_idle(void)
 			if(eventOS_scheduler_timer_synch_after_sleep(sleep_possible)!= 0)
 			{
                 // !!! TODO mbed debug?
-				//debug("Timer wakeUP Fail\n");
+				debug("Timer wakeUP Fail\n");
 			}
 		}
 	}
