@@ -13,7 +13,7 @@
   ],
   "dependencies": {
     "nanostack-event-loop": "git://git.oulu.arm.com/nanomesh/event-loop.git#yotta-build",
-    "mbed": "mbedmicro/mbed_private"
+    "mbed": "mbedmicro/mbed_private#dev_async_hal_yotta"
   },
   "targetDependencies": {}
 }
