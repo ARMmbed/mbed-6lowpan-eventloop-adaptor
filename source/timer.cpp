@@ -4,12 +4,12 @@ extern "C" {
 #include "nanostack-event-loop/platform/arm_hal_timer.h"
 } // extern "C"
 
- 
+
 static void (*sn_callback)(void) = NULL;
 static Ticker sn_timer;
 static timestamp_t sn_compare_value;
 static bool timer_enabled = false;
- 
+
 #define MAXIMUM_SLOTS 10000
 
 
@@ -40,8 +40,9 @@ void platform_timer_set_cb(void (*new_fp)(void))
  */
 void platform_timer_start(uint16_t slots)
 {
-    sn_compare_value = slots * 50; // 1 slot = 50us
+    sn_compare_value = (timestamp_t)slots * 50; // 1 slot = 50us
     sn_timer.attach_us(sn_callback, sn_compare_value);
+    sn_compare_value += us_ticker_read();
     timer_enabled = true;
 }
 
@@ -62,13 +63,16 @@ void platform_timer_disable(void)
  */
 uint16_t platform_timer_get_remaining_slots(void)
 {
-    uint32_t counter = us_ticker_read();
-    uint32_t slots = ((sn_compare_value - counter) / 50);
- 
-    if ((slots > MAXIMUM_SLOTS) || (timer_enabled == false)) {
-        slots = 0;
+    uint32_t counter = us_ticker_read(), slots = 0;
+
+    if (sn_compare_value >= counter)
+    {
+        slots = (sn_compare_value - counter) / 50;
+        if ((slots > MAXIMUM_SLOTS) || (timer_enabled == false)) {
+            slots = 0;
+        }
     }
- 
+
     return (uint16_t)slots;
 }
 
