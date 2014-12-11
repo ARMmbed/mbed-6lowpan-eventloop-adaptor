@@ -12,7 +12,7 @@
     }
   ],
   "dependencies": {
-    "nanostack-event-loop": "git://git.oulu.arm.com/nanomesh/event-loop.git#yotta-build",
+    "nanostack-event-loop": "ARMmbed/nanomesh-eventloop#~0.0.3",
     "mbed": "ARMmbed/mbed-sdk"
   },
   "targetDependencies": {}
