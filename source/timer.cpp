@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2014 ARM. All rights reserved.
+ */
 #include "mbed.h"
 
 extern "C" {

@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2014 ARM. All rights reserved.
+ */
 /* Ensure we get real prototypes not dummies from our header */
 #ifndef HAVE_DEBUG
 #define HAVE_DEBUG
