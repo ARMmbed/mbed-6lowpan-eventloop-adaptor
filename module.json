@@ -1,6 +1,6 @@
 {
   "name": "nanostack-eventos-mbed",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Nanostack eventOS platform-specific implementation for mbed",
   "keywords": [],
   "author": "",
