@@ -1,9 +1,13 @@
 {
-  "name": "nanostack-eventos-mbed",
+  "name": "mbed-6lowpan-eventloop-adaptor",
   "version": "0.0.3",
   "description": "Nanostack eventOS platform-specific implementation for mbed",
   "keywords": [],
   "author": "",
+  "repository": {
+    "url": "git@github.com:ARMmbed/mbed-6lowpan-eventloop-adaptor.git",
+    "type": "git"
+  },
   "homepage": "",
   "licenses": [
     {
@@ -13,8 +17,8 @@
   ],
   "dependencies": {
     "mbed": "ARMmbed/mbed-sdk",
-    "libservice": "ARMmbed/nanomesh-libService#~0.0.3",
-    "nanostack-event-loop": "ARMmbed/nanomesh-eventloop#~0.0.3"
+    "mbed-client-libservice": "ARMmbed/mbed-client-libservice#~0.0.6",
+    "mbed-6lowpan-eventloop": "ARMmbed/mbed-6lowpan-eventloop#~0.0.4"
   },
   "targetDependencies": {}
 }
