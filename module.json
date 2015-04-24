@@ -16,7 +16,7 @@
     }
   ],
   "dependencies": {
-    "mbed" : "ARMmbed/mbed-sdk-private",
+    "mbed" : "ARMmbed/mbed-sdk-private#event",
     "mbed-client-libservice" : "ARMmbed/mbed-client-libservice#alpha2-release",
     "mbed-6lowpan-eventloop" : "ARMmbed/mbed-6lowpan-eventloop#alpha2-release"
   },
