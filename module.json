@@ -19,7 +19,7 @@
     "mbed" : "ARMmbed/mbed-sdk-private#event",
     "mbed-client-libservice" : "ARMmbed/mbed-client-libservice#alpha2-release",
     "mbed-6lowpan-eventloop" : "ARMmbed/mbed-6lowpan-eventloop#ns_with_minar",
-    "yottos": "ARMmbed/yottos#event"
+    "yottos": "ARMmbed/yottos#ns_with_minar"
   },
   "targetDependencies": {}
 }
