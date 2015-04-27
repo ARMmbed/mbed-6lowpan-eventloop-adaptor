@@ -16,7 +16,6 @@ extern "C" {
 
 /** Global Variables which indicate when interrupt are disabled */
 volatile uint8_t sys_irq_disable_counter = 0;
-volatile uint8_t sys_wait_signal = 0;
 
 void platform_enter_critical(void)
 {
@@ -32,38 +31,11 @@ void platform_exit_critical(void)
      }
 }
 
-
-/// - nanostack eventOS platform implementation:
-
-/**
- * \brief Event schdeuler loop idle Callback which need to be port Every Application which use nanostack event scheduler
- */
-void eventOS_scheduler_idle(void)
-{
-		eventOS_scheduler_wait();
-}
-
-/**
- * \brief This function will be called when stack enter idle state and start waiting signal.
- */
-void eventOS_scheduler_wait(void)
-{
-     platform_enter_critical();
-     sys_wait_signal = 1;
-     platform_exit_critical();
-     while (sys_wait_signal) {
-        // !!! TODO mbed sleep?
-        //sleep();
-        //__WFI();
-     }
-}
-
 /**
  * \brief This function will be called when stack receive event and could wake from idle.
  */
 void eventOS_scheduler_signal(void)
 {
-    sys_wait_signal = 0;
 }
 
 /**
