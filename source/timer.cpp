@@ -7,13 +7,13 @@ extern "C" {
 #include "nanostack-event-loop/platform/arm_hal_timer.h"
 } // extern "C"
 
-#include "yottos/yottos.h"
-#include "yottos_platform/yottos_platform.h"
+#include "minar/minar.h"
+#include "minar_platform/minar_platform.h"
 
 static void (*sn_callback)(void) = NULL;
 static timestamp_t sn_compare_value;
 static bool timer_enabled = false;
-static yottos::callback_handle_t cb_handle;
+static minar::callback_handle_t cb_handle;
 
 #define MAXIMUM_SLOTS 10000
 
@@ -44,12 +44,12 @@ void platform_timer_set_cb(void (*new_fp)(void))
  */
 void platform_timer_start(uint16_t slots)
 {
-    uint32_t yottos_ticks = ((uint32_t)slots * 50 * yottos::platform::Time_Base) / 1000000;
+    uint32_t minar_ticks = ((uint32_t)slots * 50 * minar::platform::Time_Base) / 1000000;
 
-    yottos::Scheduler *sched = yottos::Scheduler::instance();
-    sn_compare_value = yottos::getTime() + yottos_ticks;
+    minar::Scheduler *sched = minar::Scheduler::instance();
+    sn_compare_value = minar::getTime() + minar_ticks;
     timer_enabled = true;
-    cb_handle = sched->postCallback(sn_callback).delay(yottos_ticks).getHandle();
+    cb_handle = sched->postCallback(sn_callback).delay(minar_ticks).getHandle();
 }
 
 /**
@@ -58,7 +58,7 @@ void platform_timer_start(uint16_t slots)
  */
 void platform_timer_disable(void)
 {
-    yottos::Scheduler::instance()->cancelCallback(cb_handle);
+    minar::Scheduler::instance()->cancelCallback(cb_handle);
     timer_enabled = false;
 }
 
@@ -69,11 +69,11 @@ void platform_timer_disable(void)
  */
 uint16_t platform_timer_get_remaining_slots(void)
 {
-    uint32_t counter = yottos::getTime(), slots = 0;
+    uint32_t counter = minar::getTime(), slots = 0;
 
     if (sn_compare_value >= counter)
     {
-        slots = (sn_compare_value - counter) * 1000000 / (50 * yottos::platform::Time_Base);
+        slots = (sn_compare_value - counter) * 1000000 / (50 * minar::platform::Time_Base);
         if ((slots > MAXIMUM_SLOTS) || (timer_enabled == false)) {
             slots = 0;
         }
