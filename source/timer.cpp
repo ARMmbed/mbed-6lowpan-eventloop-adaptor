@@ -2,6 +2,7 @@
  * Copyright (c) 2014 ARM. All rights reserved.
  */
 #include "mbed.h"
+#include "us_ticker_api.h"
 
 extern "C" {
 #include "nanostack-event-loop/platform/arm_hal_timer.h"
