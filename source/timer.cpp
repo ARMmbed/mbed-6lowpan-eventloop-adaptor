@@ -31,7 +31,7 @@ void platform_timer_enable(void)
  * \param new_fp Function pointer for stack giving timer handler
  *
  */
-void platform_timer_set_cb(void (*new_fp)(void))
+void platform_timer_set_cb(platform_timer_cb new_fp)
 {
     sn_callback = new_fp;
 }
