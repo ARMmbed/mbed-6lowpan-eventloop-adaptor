@@ -8,7 +8,6 @@
     "url": "git@github.com:ARMmbed/mbed-6lowpan-eventloop-adaptor.git",
     "type": "git"
   },
-  "homepage": "",
   "licenses": [
     {
       "url": "https://spdx.org/licenses/Apache-2.0",
