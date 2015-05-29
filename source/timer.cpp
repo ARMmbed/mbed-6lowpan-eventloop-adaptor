@@ -47,7 +47,7 @@ void platform_timer_start(uint16_t slots)
     uint32_t minar_ticks = ((uint32_t)slots * 50 * minar::platform::Time_Base) / 1000000;
 
     minar::Scheduler *sched = minar::Scheduler::instance();
-    sn_compare_value = minar::getTime() + minar_ticks;
+    sn_compare_value = minar::platform::getTime() + minar_ticks;
     timer_enabled = true;
     cb_handle = sched->postCallback(sn_callback).delay(minar_ticks).getHandle();
 }
@@ -69,7 +69,7 @@ void platform_timer_disable(void)
  */
 uint16_t platform_timer_get_remaining_slots(void)
 {
-    uint32_t counter = minar::getTime(), slots = 0;
+    uint32_t counter = minar::platform::getTime(), slots = 0;
 
     if (sn_compare_value >= counter)
     {
