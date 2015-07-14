@@ -9,8 +9,7 @@ extern "C" {
 #include "nanostack-event-loop/eventOS_scheduler.h"
 #include "nanostack-event-loop/eventOS_event_timer.h"
 
-#include "libService/platform/ns_debug.h"
-#include "libService/platform/arm_hal_interrupt.h"
+#include "platform/arm_hal_interrupt.h"
 
 } // extern "C"
 
