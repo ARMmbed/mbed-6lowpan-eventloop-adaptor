@@ -10,7 +10,7 @@
   },
   "license": "Apache-2.0",  
   "dependencies": {
-    "mbed-core": "~0.1.1",
+    "mbed-core": "~0.4.0",
     "mbed-client-libservice": "~3.0.0",
     "mbed-6lowpan-eventloop": "~0.0.6"
   },
