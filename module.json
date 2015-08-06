@@ -1,6 +1,6 @@
 {
   "name": "mbed-6lowpan-eventloop-adaptor",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Nanostack eventOS platform-specific implementation for mbed",
   "keywords": [],
   "author": "",
@@ -8,7 +8,7 @@
     "url": "git@github.com:ARMmbed/mbed-6lowpan-eventloop-adaptor.git",
     "type": "git"
   },
-  "license": "Apache-2.0",  
+  "license": "Apache-2.0",
   "dependencies": {
     "mbed-core": "~0.4.0",
     "mbed-client-libservice": "~3.0.0",
