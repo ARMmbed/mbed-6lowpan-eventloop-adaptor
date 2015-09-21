@@ -1,6 +1,6 @@
 {
   "name": "mbed-6lowpan-eventloop-adaptor",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "Nanostack eventOS platform-specific implementation for mbed",
   "keywords": [],
   "author": "",
