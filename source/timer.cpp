@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "mbed.h"
+#include "mbed-drivers/mbed.h"
 #include "us_ticker_api.h"
 
 extern "C" {
