@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 #include "mbed-drivers/mbed.h"
-
-extern "C" {
-
 #include "nanostack-event-loop/eventOS_scheduler.h"
-#include "nanostack-event-loop/eventOS_scheduler.h"
-#include "nanostack-event-loop/eventOS_event_timer.h"
-
 #include "platform/arm_hal_interrupt.h"
+#include "minar/minar.h"
+#include "core-util/FunctionPointer.h"
 
-} // extern "C"
+using minar::Scheduler;
+using namespace mbed::util;
 
-/** Global Variables which indicate when interrupt are disabled */
+/** Global variable which indicate when interrupt are disabled */
 volatile uint8_t sys_irq_disable_counter = 0;
-volatile uint8_t sys_wait_signal = 0;
+static volatile bool run_scheduled = false;
 
 void platform_enter_critical(void)
 {
@@ -43,51 +40,27 @@ void platform_exit_critical(void)
      }
 }
 
-
-/// - nanostack eventOS platform implementation:
-
-/**
- * \brief Event schdeuler loop idle Callback which need to be port Every Application which use nanostack event scheduler
- */
-void eventOS_scheduler_idle(void)
+static void run_until_idle()
 {
-		eventOS_scheduler_wait();
+    eventOS_scheduler_run_until_idle();
+    run_scheduled = false;
 }
 
 /**
- * \brief This function will be called when stack enter idle state and start waiting signal.
- */
-void eventOS_scheduler_wait(void)
-{
-     platform_enter_critical();
-     sys_wait_signal = 1;
-     platform_exit_critical();
-     while (sys_wait_signal) {
-        // !!! TODO mbed sleep?
-        //sleep();
-        //__WFI();
-     }
-}
-
-/**
- * \brief This function will be called when stack receive event and could wake from idle.
+ * \brief This function will be called when stack receives an event.
  */
 void eventOS_scheduler_signal(void)
 {
-    sys_wait_signal = 0;
+    if (!run_scheduled) {
+        Scheduler::postCallback(FunctionPointer0<void>(run_until_idle).bind()).tolerance(0);
+        run_scheduled = true;
+    }
 }
 
-/**
- * \brief This function will be called when stack can enter deep sleep state in detected time.
- *
- * \param sleep_time_ms Time in milliseconds to sleep
- *
- * \return sleeped time in milliseconds
- */
-uint32_t eventOS_scheduler_sleep(uint32_t sleep_time_ms)
+void eventOS_scheduler_idle(void)
 {
-    (void) sleep_time_ms;
-    // !!! TODO
-    return 1;
+    /*
+     * No need to port eventOS_scheduler_idle in mbedOS, use empty function to keep
+     * compiler happy.
+     */
 }
-
