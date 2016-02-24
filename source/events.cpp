@@ -45,7 +45,7 @@ void platform_interrupts_disabled(void)
     ++sys_irq_disable_counter;
 }
 
-void platform_interrupts_enabled(void)
+void platform_interrupts_enabling(void)
 {
     --sys_irq_disable_counter;
 }
