@@ -40,6 +40,16 @@ void platform_exit_critical(void)
      }
 }
 
+void platform_interrupts_disabled(void)
+{
+    ++sys_irq_disable_counter;
+}
+
+void platform_interrupts_enabled(void)
+{
+    --sys_irq_disable_counter;
+}
+
 static void run_until_idle()
 {
     eventOS_scheduler_run_until_idle();
