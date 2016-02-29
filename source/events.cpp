@@ -25,19 +25,21 @@ using namespace mbed::util;
 /** Global variable which indicate when interrupt are disabled */
 volatile uint8_t sys_irq_disable_counter = 0;
 static volatile bool run_scheduled = false;
+static uint32_t prev_state;
 
 void platform_enter_critical(void)
 {
-     if (sys_irq_disable_counter++ == 0) {
-         __disable_irq();
-     }
+    if (sys_irq_disable_counter++ == 0) {
+        prev_state = __get_PRIMASK();
+        __disable_irq();
+    }
 }
 
 void platform_exit_critical(void)
 {
-     if (--sys_irq_disable_counter == 0) {
-         __enable_irq();
-     }
+    if (--sys_irq_disable_counter == 0) {
+        __set_PRIMASK(prev_state);
+    }
 }
 
 void platform_interrupts_disabled(void)
