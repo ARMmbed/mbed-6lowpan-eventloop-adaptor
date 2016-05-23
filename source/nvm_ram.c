@@ -123,6 +123,7 @@ platform_nvm_status platform_nvm_key_create(nvm_callback *callback, const char *
             // resizing existing key
             ns_list_remove(&nvm_entry_list, current_entry);
             nvm_ram_free_entry(current_entry);
+            break;
         }
     }
 
