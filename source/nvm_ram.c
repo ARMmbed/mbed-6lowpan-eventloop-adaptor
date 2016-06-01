@@ -67,10 +67,13 @@ static void nvm_ram_timer_start(void *ctx);
 static void nvm_ram_free_entry(nvm_data_entry_t *entry);
 
 
-static void create_client_request(nvm_callback *callback, void *context, void *buf, uint16_t *buf_len, platform_nvm_status status)
+static platform_nvm_status create_client_request(nvm_callback *callback, void *context, void *buf, uint16_t *buf_len, platform_nvm_status status)
 {
     nvm_client_req_t *nvm_client_req_ptr;
     nvm_client_req_ptr = ALLOC(sizeof(nvm_client_req_t));
+    if (!nvm_client_req_ptr) {
+        return PLATFORM_NVM_ERROR;
+    }
     nvm_client_req_ptr->client_cb = callback;
     nvm_client_req_ptr->client_context = context;
     nvm_client_req_ptr->client_buffer = buf;
@@ -81,12 +84,17 @@ static void create_client_request(nvm_callback *callback, void *context, void *b
     if (nvm_context_ptr->callback_timer == NULL) {
         nvm_ram_timer_start(nvm_client_req_ptr);
     }
+
+    return PLATFORM_NVM_OK;
 }
 
 platform_nvm_status platform_nvm_init(nvm_callback *callback, void *context)
 {
     if (nvm_context_ptr == NULL) {
-        nvm_context_ptr = malloc(sizeof(nvm_context_t));
+        nvm_context_ptr = ALLOC(sizeof(nvm_context_t));
+        if (!nvm_context_ptr) {
+            return PLATFORM_NVM_ERROR;
+        }
         nvm_context_ptr->callback_timer = NULL;
         nvm_context_ptr->is_initialized = true;
         ns_list_init(&nvm_entry_list);
@@ -97,20 +105,22 @@ platform_nvm_status platform_nvm_init(nvm_callback *callback, void *context)
         }
     }
 
-    create_client_request(callback, context, NULL, NULL, PLATFORM_NVM_OK);
-    return PLATFORM_NVM_OK;
+    return create_client_request(callback, context, NULL, NULL, PLATFORM_NVM_OK);
 }
 
 platform_nvm_status platform_nvm_finalize(nvm_callback *callback, void *context)
 {
+    platform_nvm_status ret;
     if (nvm_context_ptr->is_initialized == false) {
         return PLATFORM_NVM_ERROR;
     }
 
-    create_client_request(callback, context, NULL, NULL, PLATFORM_NVM_OK);
-    nvm_context_ptr->is_initialized = false;
+    ret = create_client_request(callback, context, NULL, NULL, PLATFORM_NVM_OK);
+    if (ret == PLATFORM_NVM_OK) {
+        nvm_context_ptr->is_initialized = false;
+    }
 
-    return PLATFORM_NVM_OK;
+    return ret;
 }
 
 platform_nvm_status platform_nvm_key_create(nvm_callback *callback, const char *key_name, uint16_t value_len, uint32_t flags, void *context)
@@ -128,16 +138,28 @@ platform_nvm_status platform_nvm_key_create(nvm_callback *callback, const char *
     }
 
     nvm_data_entry_t *entry = ALLOC(sizeof(nvm_data_entry_t));
+    if (!entry) {
+        return PLATFORM_NVM_ERROR;
+    }
     memset(entry, 0, sizeof(nvm_data_entry_t));
-    entry->key = ALLOC(strlen(key_name)+1);
-    strcpy(entry->key, key_name);
+    size_t key_len = strlen(key_name) + 1;
+    entry->key = ALLOC(key_len);
+    if (!entry->key) {
+        FREE(entry);
+        return PLATFORM_NVM_ERROR;
+    }
+    memcpy(entry->key, key_name, key_len);
+    entry->data_len = value_len;
     entry->data = ALLOC(value_len);
+    if (!entry->data) {
+        FREE(entry->key);
+        FREE(entry);
+        return PLATFORM_NVM_ERROR;
+    }
 
     ns_list_add_to_end(&nvm_entry_list, entry);
 
-    create_client_request(callback, context, NULL, NULL, PLATFORM_NVM_OK);
-
-    return PLATFORM_NVM_OK;
+    return create_client_request(callback, context, NULL, NULL, PLATFORM_NVM_OK);
 }
 
 platform_nvm_status platform_nvm_key_delete(nvm_callback *callback, const char *key_name, void *context)
@@ -154,9 +176,7 @@ platform_nvm_status platform_nvm_key_delete(nvm_callback *callback, const char *
         }
     }
 
-    create_client_request(callback, context, NULL, NULL, client_status);
-
-    return PLATFORM_NVM_OK;
+    return create_client_request(callback, context, NULL, NULL, client_status);
 }
 
 platform_nvm_status platform_nvm_write(nvm_callback *callback, const char *key_name, const void *data, uint16_t *data_len, void *context)
@@ -177,8 +197,7 @@ platform_nvm_status platform_nvm_write(nvm_callback *callback, const char *key_n
         }
     }
 
-    create_client_request(callback, context, (void*)data, data_len, client_status);
-    return PLATFORM_NVM_OK;
+    return create_client_request(callback, context, (void*)data, data_len, client_status);
 }
 
 platform_nvm_status platform_nvm_read(nvm_callback *callback, const char *key_name, void *buf, uint16_t *buf_len, void *context)
@@ -199,15 +218,13 @@ platform_nvm_status platform_nvm_read(nvm_callback *callback, const char *key_na
         }
     }
 
-    create_client_request(callback, context, buf, buf_len, client_status);
-    return PLATFORM_NVM_OK;
+    return create_client_request(callback, context, buf, buf_len, client_status);
 }
 
 platform_nvm_status platform_nvm_flush(nvm_callback *callback, void *context)
 {
     tr_debug("platform_nvm_flush()");
-    create_client_request(callback, context, NULL, NULL, PLATFORM_NVM_OK);
-    return PLATFORM_NVM_OK;
+    return create_client_request(callback, context, NULL, NULL, PLATFORM_NVM_OK);
 }
 
 static void nvm_ram_timer_cb(void *args)
